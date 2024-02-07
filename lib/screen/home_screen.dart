@@ -4,6 +4,7 @@ import 'package:soccer_results/bloc/journal_bloc.dart';
 import 'package:soccer_results/model/journal/journal.dart';
 import 'package:soccer_results/repositories/journal_repository.dart';
 import 'package:soccer_results/repositories/journal_repository_impl.dart';
+import 'package:soccer_results/widget/result_card.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -69,17 +70,7 @@ class _HomePageState extends State<HomePage> {
   Widget _matchListView(BuildContext context, List<Journal> journalList) {
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) {
-        return Card(
-            child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Image.network(journalList[index].team1!.teamIconUrl!),
-                    Text(journalList[index].matchDateTime!.toUpperCase(),
-                        style: const TextStyle(color: Colors.black)),
-                  ],
-                )));
+        return ResultCard(journal: journalList[index]);
       },
       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       itemCount: journalList.length,
