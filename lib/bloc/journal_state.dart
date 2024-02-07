@@ -12,7 +12,7 @@ sealed class JournalState {
 final class JournalInitial extends JournalState {}
 
 final class JournalFetched extends JournalState {
-  final Journal matchList;
+  final List<Journal> matchList;
   const JournalFetched(this.matchList);
 }
 
