@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
             ],
           );
         } else if (state is JournalFetched) {
-          return _matchListView(context, state.journals);
+          return _matchListView(context, state.matchList);
         } else {
           return const Text('Not support');
         }
@@ -76,7 +76,8 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Image.network(journalList[index].team1!.teamIconUrl!),
-                    Text(journalList[index].matchDateTime!.toUpperCase()),
+                    Text(journalList[index].matchDateTime!.toUpperCase(),
+                        style: const TextStyle(color: Colors.black)),
                   ],
                 )));
       },
