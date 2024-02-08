@@ -15,6 +15,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late JournalRepository journalRepository;
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -25,6 +26,12 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   @override
@@ -38,7 +45,23 @@ class _HomePageState extends State<HomePage> {
             title: const Text('Match List'),
             centerTitle: true,
           ),
-          body: _matchView(context)),
+          body: _matchView(context),
+          bottomNavigationBar: BottomNavigationBar(
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                  icon: ImageIcon(
+                    AssetImage('assets/images/LALIGA_logotipo.jpg'),
+                    size: 40,
+                  ),
+                  label: 'LA LIGA'),
+              BottomNavigationBarItem(
+                  icon: ImageIcon(
+                    AssetImage('assets/images/Logo Bundes.png'),
+                    size: 40,
+                  ),
+                  label: 'BUNDESLIGA'),
+            ],
+          )),
     );
   }
 
