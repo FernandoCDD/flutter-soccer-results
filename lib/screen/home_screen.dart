@@ -6,6 +6,18 @@ import 'package:soccer_results/repositories/journal_repository.dart';
 import 'package:soccer_results/repositories/journal_repository_impl.dart';
 import 'package:soccer_results/widget/result_card.dart';
 
+const List<int> season = <int>[
+  2023,
+  2022,
+  2021,
+  2020,
+  2019,
+  2018,
+  2017,
+  2016,
+  2015
+];
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -15,6 +27,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late JournalRepository journalRepository;
+  int dropdownValue = season.first;
 
   @override
   void initState() {
@@ -31,11 +44,41 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        return JournalBloc(journalRepository)..add(JournalsFetchEvent(11));
+        return JournalBloc(journalRepository)
+          ..add(JournalsFetchEvent(20, dropdownValue));
       },
       child: Scaffold(
           appBar: AppBar(
-            title: const Text('Match List'),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Text('Match List'),
+                DropdownButton<int>(
+                  value: dropdownValue,
+                  icon: const Icon(Icons.arrow_drop_down),
+                  elevation: 16,
+                  style: const TextStyle(color: Colors.deepPurple),
+                  underline: Container(
+                    height: 2,
+                    color: Colors.deepPurpleAccent,
+                  ),
+                  onChanged: (int? value) {
+                    setState(() {
+                      dropdownValue = value!;
+                    });
+                    context
+                        .watch<JournalBloc>()
+                        .add(JournalsFetchEvent(20, dropdownValue));
+                  },
+                  items: season.map<DropdownMenuItem<int>>((int value) {
+                    return DropdownMenuItem<int>(
+                      value: value,
+                      child: Text('$value'),
+                    );
+                  }).toList(),
+                )
+              ],
+            ),
           ),
           body: _matchView(context)),
     );
@@ -52,7 +95,9 @@ class _HomePageState extends State<HomePage> {
               Text(state.messageError),
               ElevatedButton(
                 onPressed: () {
-                  context.watch<JournalBloc>().add(JournalsFetchEvent(20));
+                  context
+                      .watch<JournalBloc>()
+                      .add(JournalsFetchEvent(20, dropdownValue));
                 },
                 child: const Text('Retry'),
               )

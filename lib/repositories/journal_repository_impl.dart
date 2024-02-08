@@ -8,9 +8,9 @@ class JournalRepositoryImpl extends JournalRepository {
   final Client _client = Client();
 
   @override
-  Future<List<Journal>> fetchBundesJournal(int num) async {
-    final response = await _client
-        .get(Uri.parse('https://api.openligadb.de/getmatchdata/bl1/2023/$num'));
+  Future<List<Journal>> fetchBundesJournal(int journal, int season) async {
+    final response = await _client.get(Uri.parse(
+        'https://api.openligadb.de/getmatchdata/bl1/$season/$journal'));
     if (response.statusCode == 200) {
       //final data = json.decode(response.body).map((x) => Journal.fromMap(x));
       //return data;
