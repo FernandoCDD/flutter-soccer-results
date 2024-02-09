@@ -47,20 +47,24 @@ class _HomePageState extends State<HomePage> {
           ),
           body: _matchView(context),
           bottomNavigationBar: BottomNavigationBar(
-            items: const <BottomNavigationBarItem>[
+            items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                  icon: ImageIcon(
-                    AssetImage('assets/images/LALIGA_logotipo.jpg'),
-                    size: 40,
+                  icon: Image.asset(
+                    'assets/images/LALIGA_logotipo.jpg',
+                    height: 80,
+                    width: 80,
                   ),
                   label: 'LA LIGA'),
               BottomNavigationBarItem(
-                  icon: ImageIcon(
-                    AssetImage('assets/images/Logo Bundes.png'),
-                    size: 40,
+                  icon: Image.asset(
+                    'assets/images/Logo Bundes.png',
+                    height: 80,
+                    width: 80,
                   ),
                   label: 'BUNDESLIGA'),
             ],
+            currentIndex: _selectedIndex,
+            onTap: _onItemTapped,
           )),
     );
   }
