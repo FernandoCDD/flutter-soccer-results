@@ -19,4 +19,18 @@ class JournalRepositoryImpl extends JournalRepository {
       throw Exception('Fail to load Journals');
     }
   }
+
+  @override
+  Future<List<Journal>> fetchLaLigaJournal(int journal, int season) async {
+    final response = await _client.get(Uri.parse(
+        'https://api.openligadb.de/getmatchdata/laliga1/$season/$journal'));
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = json.decode(response.body);
+      final List<Journal> journals =
+          jsonData.map((x) => Journal.fromMap(x)).toList();
+      return journals;
+    } else {
+      throw Exception('Fail to load Journals');
+    }
+  }
 }
