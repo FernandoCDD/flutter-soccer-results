@@ -26,6 +26,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late JournalBloc _journalBloc;
   late JournalRepository journalRepository;
   int dropdownValue = season.first;
 
@@ -33,6 +34,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     journalRepository = JournalRepositoryImpl();
+    _journalBloc = JournalBloc(journalRepository)
+      ..add(JournalsFetchEvent(20, dropdownValue));
   }
 
   @override
@@ -42,12 +45,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) {
-        return JournalBloc(journalRepository)
-          ..add(JournalsFetchEvent(20, dropdownValue));
-      },
-      child: Scaffold(
+    return BlocProvider.value(
+        value: _journalBloc,
+        child: Scaffold(
           appBar: AppBar(
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -66,9 +66,8 @@ class _HomePageState extends State<HomePage> {
                     setState(() {
                       dropdownValue = value!;
                     });
-                    context
-                        .watch<JournalBloc>()
-                        .add(JournalsFetchEvent(20, dropdownValue));
+                    _journalBloc.add(JournalsFetchEvent(20, dropdownValue));
+                    //Navigator.pop(context);
                   },
                   items: season.map<DropdownMenuItem<int>>((int value) {
                     return DropdownMenuItem<int>(
@@ -80,8 +79,8 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          body: _matchView(context)),
-    );
+          body: _matchView(context),
+        ));
   }
 
   Widget _matchView(BuildContext context) {
