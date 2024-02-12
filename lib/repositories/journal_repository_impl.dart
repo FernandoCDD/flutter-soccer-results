@@ -12,8 +12,6 @@ class JournalRepositoryImpl extends JournalRepository {
     final response = await _client.get(Uri.parse(
         'https://api.openligadb.de/getmatchdata/bl1/$season/$journal'));
     if (response.statusCode == 200) {
-      //final data = json.decode(response.body).map((x) => Journal.fromMap(x));
-      //return data;
       final List<dynamic> jsonData = json.decode(response.body);
       final List<Journal> journals =
           jsonData.map((x) => Journal.fromMap(x)).toList();

@@ -18,6 +18,43 @@ const List<int> season = <int>[
   2015
 ];
 
+const List<int> journal = <int>[
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25,
+  26,
+  27,
+  28,
+  29,
+  30,
+  31,
+  32,
+  33,
+  34
+];
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -28,14 +65,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late JournalBloc _journalBloc;
   late JournalRepository journalRepository;
-  int dropdownValue = season.first;
+  int seasonValue = season.first;
+  int journalValue = journal.first;
+  bool isPressed = false;
 
   @override
   void initState() {
     super.initState();
     journalRepository = JournalRepositoryImpl();
     _journalBloc = JournalBloc(journalRepository)
-      ..add(JournalsFetchEvent(20, dropdownValue));
+      ..add(JournalsFetchEvent(journalValue, seasonValue));
   }
 
   @override
@@ -54,7 +93,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 const Text('Match List'),
                 DropdownButton<int>(
-                  value: dropdownValue,
+                  value: seasonValue,
                   icon: const Icon(Icons.arrow_drop_down),
                   elevation: 16,
                   style: const TextStyle(color: Colors.deepPurple),
@@ -64,10 +103,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                   onChanged: (int? value) {
                     setState(() {
-                      dropdownValue = value!;
+                      seasonValue = value!;
                     });
-                    _journalBloc.add(JournalsFetchEvent(20, dropdownValue));
-                    //Navigator.pop(context);
+                    _journalBloc
+                        .add(JournalsFetchEvent(journalValue, seasonValue));
                   },
                   items: season.map<DropdownMenuItem<int>>((int value) {
                     return DropdownMenuItem<int>(
@@ -84,30 +123,65 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _matchView(BuildContext context) {
-    return BlocBuilder<JournalBloc, JournalState>(
-      builder: (context, state) {
-        if (state is JournalInitial) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is JournalFetchError) {
-          return Column(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
             children: [
-              Text(state.messageError),
-              ElevatedButton(
-                onPressed: () {
-                  context
-                      .watch<JournalBloc>()
-                      .add(JournalsFetchEvent(20, dropdownValue));
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
+                  'Jornada: $journalValue',
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    isPressed = !isPressed;
+                    if (isPressed) {
+                      _showBottomSheet(context);
+                    }
+                  });
                 },
-                child: const Text('Retry'),
-              )
+                child: Icon(
+                  isPressed ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                ),
+              ),
             ],
-          );
-        } else if (state is JournalFetched) {
-          return _matchListView(context, state.matchList);
-        } else {
-          return const Text('Not support');
-        }
-      },
+          ),
+        ),
+        Expanded(
+          child: BlocBuilder<JournalBloc, JournalState>(
+            builder: (context, state) {
+              if (state is JournalInitial) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is JournalFetchError) {
+                return Column(
+                  children: [
+                    Text(state.messageError),
+                    ElevatedButton(
+                      onPressed: () {
+                        context
+                            .watch<JournalBloc>()
+                            .add(JournalsFetchEvent(journalValue, seasonValue));
+                      },
+                      child: const Text('Retry'),
+                    )
+                  ],
+                );
+              } else if (state is JournalFetched) {
+                return _matchListView(context, state.matchList);
+              } else {
+                return const Text('Not support');
+              }
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -118,6 +192,35 @@ class _HomePageState extends State<HomePage> {
       },
       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       itemCount: journalList.length,
+    );
+  }
+
+  void _showBottomSheet(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      isDismissible: false,
+      builder: (BuildContext context) {
+        return ListView.builder(
+            itemCount: journal.length,
+            itemBuilder: (context, index) {
+              int journalIndex = journal[index];
+              return ListTile(
+                title: Text(
+                  'Jornada $journalIndex',
+                  textAlign: TextAlign.center,
+                ),
+                onTap: () {
+                  setState(() {
+                    journalValue = journalIndex;
+                  });
+                  _journalBloc
+                      .add(JournalsFetchEvent(journalValue, seasonValue));
+                  isPressed = false;
+                  Navigator.pop(context);
+                },
+              );
+            });
+      },
     );
   }
 }
