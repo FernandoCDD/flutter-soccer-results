@@ -1,5 +1,5 @@
-import 'package:soccer_results/model/journal/journal.dart';
+import 'package:soccer_results/model/bundes/journal/journal.dart';
 
 abstract class JournalRepository {
-  Future<List<Journal>> fetchBundesJournal(int num);
+  Future<List<Journal>> fetchBundesJournal(int journal, int season);
 }

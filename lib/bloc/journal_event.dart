@@ -5,5 +5,6 @@ sealed class JournalEvent {}
 
 final class JournalsFetchEvent extends JournalEvent {
   final int numJournal;
-  JournalsFetchEvent(this.numJournal);
+  final int season;
+  JournalsFetchEvent(this.numJournal, this.season);
 }
