@@ -82,18 +82,20 @@ class _HomePageState extends State<HomePage> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Image.asset(
               'assets/images/Logo Bundes.png',
-              height: 80,
-              width: 80,
+              height: 90,
+              width: 90,
             ),
-            label: 'Bundesliga',
+            label: '',
           ),
           BottomNavigationBarItem(
             icon: Image.asset(
-              'assets/images/LALIGA_logotipo.jpg',
+              'assets/images/LaLiga_2023_Horizontal_Logo.svg.png',
               height: 80,
               width: 80,
             ),
