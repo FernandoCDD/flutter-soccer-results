@@ -37,41 +37,9 @@ class _LaLigaResultsPageState extends State<LaLigaResultsPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-        value: _journalBloc,
-        child: Scaffold(
-          appBar: AppBar(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                const Text('Match List'),
-                DropdownButton<int>(
-                  value: seasonValue,
-                  icon: const Icon(Icons.arrow_drop_down),
-                  elevation: 16,
-                  style: const TextStyle(color: Colors.deepPurple),
-                  underline: Container(
-                    height: 2,
-                    color: Colors.deepPurpleAccent,
-                  ),
-                  onChanged: (int? value) {
-                    setState(() {
-                      seasonValue = value!;
-                    });
-                    _journalBloc
-                        .add(JournalsFetchEvent(journalValue, seasonValue));
-                  },
-                  items: season.map<DropdownMenuItem<int>>((int value) {
-                    return DropdownMenuItem<int>(
-                      value: value,
-                      child: Text('$value'),
-                    );
-                  }).toList(),
-                )
-              ],
-            ),
-          ),
-          body: _matchView(context),
-        ));
+      value: _journalBloc,
+      child: _matchView(context),
+    );
   }
 
   Widget _matchView(BuildContext context) {
@@ -80,28 +48,63 @@ class _LaLigaResultsPageState extends State<LaLigaResultsPage> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Row(
+          child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Text(
-                  'Jornada: $journalValue',
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  const Text('LaLiga EA Sports',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  DropdownButton<int>(
+                    value: seasonValue,
+                    icon: const Icon(Icons.arrow_drop_down),
+                    elevation: 16,
+                    style: const TextStyle(color: Colors.deepPurple),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    onChanged: (int? value) {
+                      setState(() {
+                        seasonValue = value!;
+                      });
+                      _journalBloc
+                          .add(JournalsFetchEvent(journalValue, seasonValue));
+                    },
+                    items: season.map<DropdownMenuItem<int>>((int value) {
+                      return DropdownMenuItem<int>(
+                        value: value,
+                        child: Text('$value'),
+                      );
+                    }).toList(),
+                  )
+                ],
               ),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    isPressed = !isPressed;
-                    if (isPressed) {
-                      _showBottomSheet(context);
-                    }
-                  });
-                },
-                child: Icon(
-                  isPressed ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text(
+                      'Jornada: $journalValue',
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isPressed = !isPressed;
+                        if (isPressed) {
+                          _showBottomSheet(context);
+                        }
+                      });
+                    },
+                    child: Icon(
+                      isPressed ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

@@ -91,11 +91,11 @@ class _HomePageState extends State<HomePage> {
               height: 30,
               width: 30,
             ),
-            label: '',
+            label: 'Bundesliga',
           ),
           BottomNavigationBarItem(
-            icon: Image.network(
-              'https://www.fifplay.com/img/public/laliga-logo.png',
+            icon: Image.asset(
+              'assets/images/laliga.png',
               height: 30,
               width: 30,
             ),
