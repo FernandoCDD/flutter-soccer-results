@@ -38,32 +38,26 @@ class _ResultCardState extends State<ResultCard> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.network(
-                            widget.journal.team1!.teamIconUrl!,
+                          SizedBox(
                             width: 50,
                             height: 50,
-                            errorBuilder: (context, error, stackTrace) {
-                              // Manejar el error de carga de la imagen aquí
-                              return Container(
-                                width: 50,
-                                height: 50,
-                                color: Colors
-                                    .grey, // O cualquier otro widget que desees mostrar en lugar de la imagen
-                                child: const Icon(Icons
-                                    .error), // O cualquier otro widget que desees mostrar en lugar de la imagen
-                              );
-                            },
+                            child: Image.network(
+                              widget.journal.team1!.teamIconUrl!,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(Icons.error);
+                              },
+                            ),
                           ),
                           Text(widget.journal.team1!.shortName!)
                         ],
                       ),
                     ),
-                    Center(
-                      child: Expanded(
-                        flex: 1,
+                    Expanded(
+                      flex: 1,
+                      child: Center(
                         child: Text(
                           '${widget.journal.matchResults?[1].pointsTeam1!} : ${widget.journal.matchResults?[1].pointsTeam2!}',
-                          style: TextStyle(fontSize: 40),
+                          style: const TextStyle(fontSize: 40),
                         ),
                       ),
                     ),
@@ -72,26 +66,21 @@ class _ResultCardState extends State<ResultCard> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.network(
-                            widget.journal.team2!.teamIconUrl!,
+                          SizedBox(
                             width: 50,
                             height: 50,
-                            errorBuilder: (context, error, stackTrace) {
-                              // Manejar el error de carga de la imagen aquí
-                              return Container(
-                                width: 50,
-                                height: 50,
-                                color: Colors
-                                    .grey, // O cualquier otro widget que desees mostrar en lugar de la imagen
-                                child: const Icon(Icons
-                                    .error), // O cualquier otro widget que desees mostrar en lugar de la imagen
-                              );
-                            },
+                            child: Image.network(
+                              widget.journal.team2!.teamIconUrl!,
+                              errorBuilder: (context, error, stackTrace) {
+                                // Manejar el error de carga de la imagen aquí
+                                return const Icon(Icons.error);
+                              },
+                            ),
                           ),
-                          Text(widget.journal.team2!.shortName!)
+                          Text(widget.journal.team1!.shortName!)
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               ],
