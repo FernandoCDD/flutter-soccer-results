@@ -16,8 +16,8 @@ class JournalBloc extends Bloc<JournalEvent, JournalState> {
   void _onJournalFetchList(
       JournalsFetchEvent event, Emitter<JournalState> emit) async {
     try {
-      final matchList =
-          await journalRepository.fetchBundesJournal(event.numJournal);
+      final matchList = await journalRepository.fetchBundesJournal(
+          event.numJournal, event.season);
       emit(JournalFetched(matchList));
       return;
     } on Exception catch (e) {
