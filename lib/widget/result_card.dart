@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:soccer_results/model/journal/journal.dart';
+import 'package:soccer_results/model/bundes/journal/journal.dart';
 
 class ResultCard extends StatefulWidget {
   final Journal journal;
