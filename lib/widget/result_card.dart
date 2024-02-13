@@ -10,8 +10,6 @@ class ResultCard extends StatefulWidget {
 }
 
 class _ResultCardState extends State<ResultCard> {
-  late final goals1 = widget.journal.matchResults?[1].pointsTeam1!;
-  late final goals2 = widget.journal.matchResults?[1].pointsTeam2!;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -54,7 +52,7 @@ class _ResultCardState extends State<ResultCard> {
                     child: Expanded(
                       flex: 1,
                       child: Text(
-                        '$goals1 : $goals2',
+                        '${widget.journal.matchResults?[1].pointsTeam1!} : ${widget.journal.matchResults?[1].pointsTeam2!}',
                         style: TextStyle(fontSize: 40),
                       ),
                     ),
