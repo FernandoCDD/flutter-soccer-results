@@ -20,7 +20,6 @@ class _LaLigaResultsPageState extends State<LaLigaResultsPage> {
   int seasonValue = season.first;
   int journalValue = journal.first;
   bool isPressed = false;
-  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -33,12 +32,6 @@ class _LaLigaResultsPageState extends State<LaLigaResultsPage> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
   }
 
   @override
@@ -183,4 +176,3 @@ class _LaLigaResultsPageState extends State<LaLigaResultsPage> {
     );
   }
 }
-

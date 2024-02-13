@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:soccer_results/model/bundes/journal/journal.dart';
 
-
 class ResultCard extends StatefulWidget {
   final Journal journal;
   const ResultCard({super.key, required this.journal});
@@ -56,7 +55,7 @@ class _ResultCardState extends State<ResultCard> {
                       flex: 1,
                       child: Text(
                         '$goals1 : $goals2',
-                        style: TextStyle(fontSize: 40),
+                        style: const TextStyle(fontSize: 40),
                       ),
                     ),
                   ),

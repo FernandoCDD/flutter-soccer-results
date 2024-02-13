@@ -15,7 +15,6 @@ class BundesligaResultsPage extends StatefulWidget {
 }
 
 class _BundesligaResultsPageState extends State<BundesligaResultsPage> {
-  int _selectedIndex = 0;
   late BundesJournalBloc _journalBloc;
   late JournalRepository journalRepository;
   int seasonValue = season.first;
@@ -33,12 +32,6 @@ class _BundesligaResultsPageState extends State<BundesligaResultsPage> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
   }
 
   @override

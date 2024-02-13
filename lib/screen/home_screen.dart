@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:soccer_results/bloc/journal_bloc.dart';
-import 'package:soccer_results/model/bundes/journal/journal.dart';
-import 'package:soccer_results/repositories/bundesliga/journal_repository.dart';
-import 'package:soccer_results/repositories/bundesliga/journal_repository_impl.dart';
 import 'package:soccer_results/screen/bundesliga_results.dart';
 import 'package:soccer_results/screen/laliga_results_page.dart';
-import 'package:soccer_results/widget/result_card.dart';
 
 const List<int> season = <int>[
   2023,
@@ -66,9 +60,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-    
+
   static const List<Widget> _widgetOptions = <Widget>[
     BundesligaResultsPage(),
     LaLigaResultsPage(),
@@ -78,10 +70,10 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _selectedIndex = index;
     });
-  } 
+  }
 
   @override
-  Widget build (BuildContext context) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Soccer Results'),
@@ -93,18 +85,18 @@ class _HomePageState extends State<HomePage> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Image.asset(
-                    'assets/images/Logo Bundes.png',
-                    height: 80,
-                    width: 80,
-                  ),
+              'assets/images/Logo Bundes.png',
+              height: 80,
+              width: 80,
+            ),
             label: 'Bundesliga',
           ),
           BottomNavigationBarItem(
             icon: Image.asset(
-                    'assets/images/LALIGA_logotipo.jpg',
-                    height: 80,
-                    width: 80,
-                  ),
+              'assets/images/LALIGA_logotipo.jpg',
+              height: 80,
+              width: 80,
+            ),
             label: 'La Liga',
           ),
         ],
