@@ -88,16 +88,16 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Image.asset(
               'assets/images/Logo Bundes.png',
-              height: 90,
-              width: 90,
+              height: 30,
+              width: 30,
             ),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Image.asset(
-              'assets/images/LaLiga_2023_Horizontal_Logo.svg.png',
-              height: 80,
-              width: 80,
+            icon: Image.network(
+              'https://www.fifplay.com/img/public/laliga-logo.png',
+              height: 30,
+              width: 30,
             ),
             label: 'La Liga',
           ),
