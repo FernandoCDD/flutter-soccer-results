@@ -43,10 +43,10 @@ class DetailsScreen extends StatelessWidget {
                     children: [
                       Text(
                         '${journalSelected.matchResults?[1].pointsTeam1!} : ${journalSelected.matchResults?[1].pointsTeam2!}',
-                        style: TextStyle(fontSize: 40),
+                        style: const TextStyle(fontSize: 40),
                       ),
                       Text(cambiarFormatoFecha(journalSelected.matchDateTime!),
-                          style: TextStyle(fontSize: 10))
+                          style: const TextStyle(fontSize: 10))
                     ],
                   ),
                 ),
@@ -103,29 +103,19 @@ class DetailsScreen extends StatelessWidget {
                   ],
                 ),
               ),
-               Expanded(
-                flex: 1,
-                child: ListView.builder(
-                  itemCount: journalSelected.goals!.length,
-                  itemBuilder: (context, index) {
-                    int journalIndex = journal[index];
-                    return ListTile(
-                        title: Text(
-                        'Jornada $journalIndex',
-                         textAlign: TextAlign.center,
-                        ),
-                        onTap: () {
-                          setState(() {
-                            journalValue = journalIndex;
-                          });
-                        _journalBloc
-                      .     add(JournalsFetchEvent(journalValue, seasonValue));
-                        isPressed = false;
-                        Navigator.pop(context);
-                },
-              );
-            });
-              ),
+              Expanded(
+                  flex: 1,
+                  child: ListView.builder(
+                      itemCount: journalSelected.goals!.length,
+                      itemBuilder: (context, index) {
+                        int goalIndex = journalSelected.goals![index];
+                        return ListTile(
+                          title: Text(
+                            'Jornada $goalIndex',
+                            textAlign: TextAlign.center,
+                          ),
+                        );
+                      })),
               Expanded(
                 flex: 4,
                 child: Column(
