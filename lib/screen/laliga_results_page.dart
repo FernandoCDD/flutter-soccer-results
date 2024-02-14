@@ -37,15 +37,33 @@ class _LaLigaResultsPageState extends State<LaLigaResultsPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-        value: _journalBloc,
-        child: Scaffold(
-          appBar: AppBar(
+      value: _journalBloc,
+      child: Scaffold(
+        body: Column(
+          children: [
+            const SizedBox(height: 8),
+            const Text(
+              'LA LIGA',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Expanded(
+              child: _matchView(context),
+            ),
+          ],
+        ),
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: AppBar(
             title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Match List'),
+                // Dropdown de la jornada
                 DropdownButton<int>(
-                  value: seasonValue,
+                  value: journalValue,
                   icon: const Icon(Icons.arrow_drop_down),
                   elevation: 16,
                   style: const TextStyle(color: Colors.deepPurple),
@@ -55,57 +73,30 @@ class _LaLigaResultsPageState extends State<LaLigaResultsPage> {
                   ),
                   onChanged: (int? value) {
                     setState(() {
-                      seasonValue = value!;
+                      journalValue = value!;
                     });
-                    _journalBloc
-                        .add(JournalsFetchEvent(journalValue, seasonValue));
+                    _journalBloc.add(JournalsFetchEvent(journalValue, seasonValue));
                   },
-                  items: season.map<DropdownMenuItem<int>>((int value) {
+                  items: journal.map<DropdownMenuItem<int>>((int value) {
                     return DropdownMenuItem<int>(
                       value: value,
-                      child: Text('$value'),
+                      child: Text('Jornada $value'),
                     );
                   }).toList(),
-                )
+                ),
               ],
             ),
+            centerTitle: true,
           ),
-          body: _matchView(context),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _matchView(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Text(
-                  'Jornada: $journalValue',
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    isPressed = !isPressed;
-                    if (isPressed) {
-                      _showBottomSheet(context);
-                    }
-                  });
-                },
-                child: Icon(
-                  isPressed ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                ),
-              ),
-            ],
-          ),
-        ),
         Expanded(
           child: BlocBuilder<LaLigaJournalBloc, JournalState>(
             builder: (context, state) {

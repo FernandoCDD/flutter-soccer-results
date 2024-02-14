@@ -63,7 +63,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/LALIGA_logotipo.jpg
+    - assets/images/laliga.png
     - assets/images/Logo Bundes.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
