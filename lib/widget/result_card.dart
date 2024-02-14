@@ -17,6 +17,44 @@ class _ResultCardState extends State<ResultCard> {
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        Image.network(widget.journal.team1!.teamIconUrl!,
+                            width: 40, height: 40),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 8.0),
+                        ),
+                        Text(
+                          widget.journal.team1!.shortName!,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text('${widget.journal.matchResults?[1].pointsTeam1!}')
+                      ],
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/*
+ return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
               Text(widget.journal.group!.groupName!),
@@ -88,6 +126,5 @@ class _ResultCardState extends State<ResultCard> {
           ),
         ),
       ),
-    );
-  }
-}
+    ); 
+*/
