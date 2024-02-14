@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:soccer_results/model/bundes/journal/journal.dart';
-import 'package:timelines/timelines.dart';
 
 class DetailsScreen extends StatelessWidget {
   final Journal journalSelected;
@@ -9,7 +8,22 @@ class DetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<dynamic> goalsList = List.from(journalSelected.goals!);
-    goalsList.sort((a, b) => a['matchMinute'].compareTo(b['matchMinute']));
+    goalsList.sort((a, b) {
+      var matchMinuteA = a['matchMinute'];
+      var matchMinuteB = b['matchMinute'];
+
+      // Manejar el caso de null
+      if (matchMinuteA == null && matchMinuteB == null) {
+        return 0;
+      } else if (matchMinuteA == null) {
+        return 0;
+      } else if (matchMinuteB == null) {
+        return 0;
+      } else {
+        return matchMinuteA.compareTo(matchMinuteB);
+      }
+    });
+
     return Scaffold(
         appBar: AppBar(),
         body: Column(children: [
@@ -63,14 +77,11 @@ class DetailsScreen extends StatelessWidget {
                       width: 50,
                       height: 50,
                       errorBuilder: (context, error, stackTrace) {
-                        // Manejar el error de carga de la imagen aquí
                         return Container(
                           width: 50,
                           height: 50,
-                          color: Colors
-                              .grey, // O cualquier otro widget que desees mostrar en lugar de la imagen
-                          child: const Icon(Icons
-                              .error), // O cualquier otro widget que desees mostrar en lugar de la imagen
+                          color: Colors.grey,
+                          child: const Icon(Icons.error),
                         );
                       },
                     ),
@@ -82,38 +93,104 @@ class DetailsScreen extends StatelessWidget {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Timeline.tileBuilder(
-                builder: TimelineTileBuilder.fromStyle(
-                  itemCount: goalsList.length,
-                  contentsAlign: ContentsAlign.alternating,
-                  contentsBuilder: (context, index) {
-                    dynamic goal = goalsList[index];
-                    int scoreTeam1 = goal['scoreTeam1'];
-                    int scoreTeam2 = goal['scoreTeam2'];
-                    int matchMinute = goal['matchMinute'];
-                    String goalGetterName = goal['goalGetterName'];
+                padding: const EdgeInsets.all(15.0),
+                child: goalsList.isNotEmpty
+                    ? ListView.builder(
+                        itemCount: goalsList.length,
+                        itemBuilder: (context, index) {
+                          dynamic goal = goalsList[index];
+                          int scoreTeam1 = goal['scoreTeam1'] ?? -1;
+                          int scoreTeam2 = goal['scoreTeam2'] ?? -1;
+                          int matchMinute = goal['matchMinute'] ?? 0;
+                          String goalGetterName =
+                              goal['goalGetterName'] ?? "unknown";
 
-                    return ListTile(
-                      title: Text(
-                        '$goalGetterName - Min.: $matchMinute - $scoreTeam1:$scoreTeam2',
-                        textAlign: TextAlign.center,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      '$matchMinute\'',
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(color: Colors.grey),
+                                        borderRadius: BorderRadius.circular(8),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            spreadRadius: 5,
+                                            blurRadius: 7,
+                                            offset: const Offset(0,
+                                                3), // changes position of shadow
+                                          ),
+                                        ]),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.sports_soccer_rounded,
+                                              size: 20,
+                                              color: Colors.grey,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              goalGetterName,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 18,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          'Resultado: $scoreTeam1 - $scoreTeam2',
+                                          style: const TextStyle(fontSize: 16),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      )
+                    : const Center(
+                        child: Text('No hay más información sobre el partido'),
+                      )),
           ),
         ]));
   }
 }
 
 String cambiarFormatoFecha(String fecha) {
-  // Parseamos la cadena de fecha a un objeto DateTime
   DateTime fechaObjeto = DateTime.parse(fecha);
 
-  // Creamos una lista con los nombres de los meses en español
   List<String> nombresMeses = [
     'ENE.',
     'FEB.',
@@ -129,10 +206,8 @@ String cambiarFormatoFecha(String fecha) {
     'DIC.'
   ];
 
-  // Obtenemos el nombre del mes correspondiente
   String nombreMes = nombresMeses[fechaObjeto.month - 1];
 
-  // Formateamos la fecha en el nuevo formato
   String nuevoFormato = '${fechaObjeto.day}$nombreMes ${fechaObjeto.year}';
 
   return nuevoFormato;
