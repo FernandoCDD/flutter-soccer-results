@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:soccer_results/bloc/journal_bloc.dart';
+import 'package:soccer_results/bloc/group/group_bloc.dart';
+import 'package:soccer_results/bloc/journal/journal_bloc.dart';
 import 'package:soccer_results/model/bundes/journal/journal.dart';
 import 'package:soccer_results/repositories/bundesliga/journal_repository.dart';
 import 'package:soccer_results/repositories/bundesliga/journal_repository_impl.dart';
@@ -17,6 +18,8 @@ class LaLigaResultsPage extends StatefulWidget {
 class _LaLigaResultsPageState extends State<LaLigaResultsPage> {
   late JournalRepository journalRepository;
   late LaLigaJournalBloc _journalBloc;
+  late GroupBloc _groupBloc;
+
   int seasonValue = season.first;
   int journalValue = journal.first;
   bool isPressed = false;
@@ -27,6 +30,8 @@ class _LaLigaResultsPageState extends State<LaLigaResultsPage> {
     journalRepository = JournalRepositoryImpl();
     _journalBloc = LaLigaJournalBloc(journalRepository)
       ..add(JournalsFetchEvent(journalValue, seasonValue));
+    _groupBloc = GroupBloc(
+        journalRepository..add(GroupsFetchEvent("laliga1", seasonValue)));
   }
 
   @override
@@ -36,8 +41,13 @@ class _LaLigaResultsPageState extends State<LaLigaResultsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _journalBloc,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(
+          value: _journalBloc,
+        ),
+        BlocProvider.value(value: _groupBloc)
+      ],
       child: _matchView(context),
     );
   }
@@ -155,26 +165,34 @@ class _LaLigaResultsPageState extends State<LaLigaResultsPage> {
       context: context,
       isDismissible: false,
       builder: (BuildContext context) {
-        return ListView.builder(
-            itemCount: journal.length,
-            itemBuilder: (context, index) {
-              int journalIndex = journal[index];
-              return ListTile(
-                title: Text(
-                  'Jornada $journalIndex',
-                  textAlign: TextAlign.center,
-                ),
-                onTap: () {
-                  setState(() {
-                    journalValue = journalIndex;
-                  });
-                  _journalBloc
-                      .add(JournalsFetchEvent(journalValue, seasonValue));
-                  isPressed = false;
-                  Navigator.pop(context);
+        return BlocBuilder<GroupBloc, GroupState>(
+          builder: (context, state) {
+            if (state is GroupsFetchEvent) {
+              return ListView.builder(
+                itemCount: state.groups.length,
+                itemBuilder: (context, index) {
+                  int groupId = state.groups[index].groupId!;
+                  return ListTile(
+                    title: Text(
+                      'Jornada $groupId',
+                      textAlign: TextAlign.center,
+                    ),
+                    onTap: () {
+                      _journalBloc.add(
+                        JournalsFetchEvent(groupId, seasonValue),
+                      );
+                      Navigator.pop(context);
+                    },
+                  );
                 },
               );
-            });
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        );
       },
     );
   }
