@@ -49,7 +49,9 @@ class _ResultCardState extends State<ResultCard> {
                       ),
                       const Spacer(),
                       Text(
-                        '${widget.journal.matchResults?[1].pointsTeam1!}',
+                        !widget.journal.matchResults!.isEmpty
+                            ? '${widget.journal.matchResults?[1].pointsTeam1!}'
+                            : "",
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 17),
                       )
@@ -80,7 +82,9 @@ class _ResultCardState extends State<ResultCard> {
                       ),
                       const Spacer(),
                       Text(
-                        '${widget.journal.matchResults?[1].pointsTeam2!}',
+                        !widget.journal.matchResults!.isEmpty
+                            ? '${widget.journal.matchResults?[1].pointsTeam2!}'
+                            : "",
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 17),
                       )
@@ -99,22 +103,34 @@ class _ResultCardState extends State<ResultCard> {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Padding(padding: EdgeInsets.only(top: 8.0)),
-                Text(cambiarFormatoFecha(widget.journal.matchDateTime!),
-                    style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.bold)),
-                const Padding(padding: EdgeInsets.only(top: 8.0)),
-                Text(
-                    widget.journal.matchIsFinished!
-                        ? 'Fin del partido'
-                        : '${widget.journal.matchDateTime}',
-                    style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 138, 138, 138))),
-                const Padding(padding: EdgeInsets.only(top: 8.0)),
-              ],
+              children: widget.journal.matchIsFinished!
+                  ? [
+                      const Padding(padding: EdgeInsets.only(top: 8.0)),
+                      Text(cambiarFormatoFecha(widget.journal.matchDateTime!),
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold)),
+                      Text(
+                          widget.journal.matchIsFinished!
+                              ? 'Fin del partido'
+                              : '',
+                          style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 138, 138, 138))),
+                      const Padding(padding: EdgeInsets.only(top: 8.0)),
+                    ]
+                  : [
+                      const Padding(padding: EdgeInsets.only(top: 8.0)),
+                      Text(
+                          widget.journal.matchDateTime!.substring(11,
+                              16), //Que ponga la hora si el parrtido no esta empezado
+                          style: const TextStyle(fontSize: 18)),
+                      const Padding(padding: EdgeInsets.only(left: 8.0)),
+                      Text(cambiarFormatoFecha(widget.journal.matchDateTime!),
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold)),
+                      const Padding(padding: EdgeInsets.only(top: 8.0)),
+                    ],
             )
           ],
         ),
@@ -147,83 +163,3 @@ String cambiarFormatoFecha(String fecha) {
 
   return nuevoFormato;
 }
-/*
- return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Text(widget.journal.group!.groupName!),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.network(
-                          widget.journal.team1!.teamIconUrl!,
-                          width: 50,
-                          height: 50,
-                          errorBuilder: (context, error, stackTrace) {
-                            // Manejar el error de carga de la imagen aquí
-                            return Container(
-                              width: 50,
-                              height: 50,
-                              color: Colors
-                                  .grey, // O cualquier otro widget que desees mostrar en lugar de la imagen
-                              child: const Icon(Icons
-                                  .error), // O cualquier otro widget que desees mostrar en lugar de la imagen
-                            );
-                          },
-                        ),
-                        Text(widget.journal.team1!.shortName!)
-                      ],
-                    ),
-                  ),
-                  Center(
-                    child: Expanded(
-                      flex: 1,
-                      child: Text(
-                        '${widget.journal.matchResults?[1].pointsTeam1!} : ${widget.journal.matchResults?[1].pointsTeam2!}',
-                        style: TextStyle(fontSize: 40),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.network(
-                          widget.journal.team2!.teamIconUrl!,
-                          width: 50,
-                          height: 50,
-                          errorBuilder: (context, error, stackTrace) {
-                            // Manejar el error de carga de la imagen aquí
-                            return Container(
-                              width: 50,
-                              height: 50,
-                              color: Colors
-                                  .grey, // O cualquier otro widget que desees mostrar en lugar de la imagen
-                              child: const Icon(Icons
-                                  .error), // O cualquier otro widget que desees mostrar en lugar de la imagen
-                            );
-                          },
-                        ),
-                        Text(widget.journal.team2!.shortName!)
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    ); 
-*/
-
