@@ -155,36 +155,40 @@ class _BundesligaResultsPageState extends State<BundesligaResultsPage> {
   }
 
   void _showBottomSheet(BuildContext context) {
+    _groupBloc.add(GroupsFetchEvent('bl1', seasonValue));
     showModalBottomSheet<void>(
       context: context,
       isDismissible: false,
       builder: (BuildContext context) {
-        return BlocBuilder<GroupBloc, GroupState>(
-          builder: (context, state) {
-            if (state is GroupsFetchEvent) {
-              return ListView.builder(
-                itemCount: state.groups.length,
-                itemBuilder: (context, index) {
-                  int journalIndex = state.groups[index].groupId!;
-                  return ListTile(
-                    title: Text(
-                      state.groups[index].groupName!,
-                      textAlign: TextAlign.center,
-                    ),
-                    onTap: () {
-                      _journalBloc
-                          .add(JournalsFetchEvent(journalIndex, seasonValue));
-                      Navigator.pop(context);
-                    },
-                  );
-                },
-              );
-            } else {
+        return BlocProvider.value(
+          value: _groupBloc,
+          child: BlocBuilder<GroupBloc, GroupState>(
+            builder: (context, state) {
+              if (state is GroupFetched) {
+                return ListView.builder(
+                  itemCount: state.groupList.length,
+                  itemBuilder: (context, index) {
+                    int groupId = state.groupList[index].groupOrderId!;
+                    return ListTile(
+                      title: Text(
+                        'Jornada $groupId',
+                        textAlign: TextAlign.center,
+                      ),
+                      onTap: () {
+                        _journalBloc.add(
+                          JournalsFetchEvent(groupId, seasonValue),
+                        );
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
+              }
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            }
-          },
+            },
+          ),
         );
       },
     );

@@ -41,13 +41,8 @@ class _LaLigaResultsPageState extends State<LaLigaResultsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider.value(
-          value: _journalBloc,
-        ),
-        BlocProvider.value(value: _groupBloc)
-      ],
+    return BlocProvider.value(
+      value: _journalBloc,
       child: _matchView(context),
     );
   }
@@ -161,37 +156,40 @@ class _LaLigaResultsPageState extends State<LaLigaResultsPage> {
   }
 
   void _showBottomSheet(BuildContext context) {
+    _groupBloc.add(GroupsFetchEvent('laliga1', seasonValue));
     showModalBottomSheet<void>(
       context: context,
       isDismissible: false,
       builder: (BuildContext context) {
-        return BlocBuilder<GroupBloc, GroupState>(
-          builder: (context, state) {
-            if (state is GroupsFetchEvent) {
-              return ListView.builder(
-                itemCount: state.groups.length,
-                itemBuilder: (context, index) {
-                  int groupId = state.groups[index].groupId!;
-                  return ListTile(
-                    title: Text(
-                      'Jornada $groupId',
-                      textAlign: TextAlign.center,
-                    ),
-                    onTap: () {
-                      _journalBloc.add(
-                        JournalsFetchEvent(groupId, seasonValue),
-                      );
-                      Navigator.pop(context);
-                    },
-                  );
-                },
-              );
-            } else {
+        return BlocProvider.value(
+          value: _groupBloc,
+          child: BlocBuilder<GroupBloc, GroupState>(
+            builder: (context, state) {
+              if (state is GroupFetched) {
+                return ListView.builder(
+                  itemCount: state.groupList.length,
+                  itemBuilder: (context, index) {
+                    int groupId = state.groupList[index].groupOrderId!;
+                    return ListTile(
+                      title: Text(
+                        'Jornada $groupId',
+                        textAlign: TextAlign.center,
+                      ),
+                      onTap: () {
+                        _journalBloc.add(
+                          JournalsFetchEvent(groupId, seasonValue),
+                        );
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
+              }
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            }
-          },
+            },
+          ),
         );
       },
     );
