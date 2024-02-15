@@ -25,8 +25,6 @@ class _ResultCardState extends State<ResultCard> {
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
-            side: const BorderSide(
-                color: Color.fromARGB(255, 177, 176, 176), width: 1),
           ),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -104,12 +102,10 @@ class _ResultCardState extends State<ResultCard> {
                   ),
                 ),
                 Container(
-                  width: 1, // Ancho de la barra
-                  height:
-                      70, // Altura de la barra (ajusta según tus necesidades)
-                  color: Colors.grey, // Color de la barra
-                  margin: const EdgeInsets.symmetric(
-                      horizontal: 8), // Margen horizontal
+                  width: 1,
+                  height: 70,
+                  color: Colors.grey,
+                  margin: const EdgeInsets.symmetric(horizontal: 8),
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -134,9 +130,7 @@ class _ResultCardState extends State<ResultCard> {
                         ]
                       : [
                           const Padding(padding: EdgeInsets.only(top: 8.0)),
-                          Text(
-                              widget.journal.matchDateTime!.substring(11,
-                                  16), //Que ponga la hora si el parrtido no esta empezado
+                          Text(widget.journal.matchDateTime!.substring(11, 16),
                               style: const TextStyle(fontSize: 18)),
                           const Padding(padding: EdgeInsets.only(left: 8.0)),
                           Text(
