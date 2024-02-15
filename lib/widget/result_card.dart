@@ -12,125 +12,111 @@ class ResultCard extends StatefulWidget {
 class _ResultCardState extends State<ResultCard> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
-          side: const BorderSide(color: Colors.black, width: 1),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Expanded(
-                flex: 2,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      children: [
-                        SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: Image.network(
-                            widget.journal.team1!.teamIconUrl!,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(Icons.error);
-                            },
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 8.0),
-                        ),
-                        Text(
-                          widget.journal.team1!.shortName!,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 17),
-                        ),
-                        const Spacer(),
-                        Text(
-                          '${widget.journal.matchResults?[1].pointsTeam1!}',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 17),
-                        )
-                      ],
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 8.0),
-                    ),
-                    Row(
-                      children: [
-                        SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: Image.network(
-                            widget.journal.team2!.teamIconUrl!,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(Icons.error);
-                            },
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 8.0),
-                        ),
-                        Text(
-                          widget.journal.team2!.shortName!,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 17),
-                        ),
-                        const Spacer(),
-                        Text(
-                          '${widget.journal.matchResults?[1].pointsTeam2!}',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 17),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                width: 1, // Ancho de la barra
-                height: 70, // Altura de la barra (ajusta según tus necesidades)
-                color: Colors.grey, // Color de la barra
-                margin: const EdgeInsets.symmetric(
-                    horizontal: 8), // Margen horizontal
-              ),
-              Column(
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+        side: const BorderSide(
+            color: Color.fromARGB(255, 177, 176, 176), width: 1),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Padding(padding: EdgeInsets.only(top: 8.0)),
-
-                  Text(cambiarFormatoFecha(widget.journal.matchDateTime!),
-                      style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.bold)),
-                  const Padding(padding: EdgeInsets.only(top: 8.0)),
-                  
-                  Text(
-                      widget.journal.matchIsFinished!
-                          ? 'Fin del partido'
-                          : '${widget.journal.matchDateTime}',
-                      style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 138, 138, 138))),
-
-                  const Padding(padding: EdgeInsets.only(top: 8.0)),
-                          
-                  if (widget.journal
-                      .matchIsFinished!) // Verifica si el partido está finalizado
-                      TextButton(
-                        onPressed: () {
-                        // Aquí puedes agregar la lógica para ver los detalles del partido
-                      },
-                      child: const Text('Ver detalles'),
-                    ),
+                  Row(
+                    children: [
+                      SizedBox(
+                        height: 40,
+                        width: 40,
+                        child: Image.network(
+                          widget.journal.team1!.teamIconUrl!,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(Icons.error);
+                          },
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 8.0),
+                      ),
+                      Text(
+                        widget.journal.team1!.shortName!,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 17),
+                      ),
+                      const Spacer(),
+                      Text(
+                        '${widget.journal.matchResults?[1].pointsTeam1!}',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 17),
+                      )
+                    ],
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 8.0),
+                  ),
+                  Row(
+                    children: [
+                      SizedBox(
+                        height: 40,
+                        width: 40,
+                        child: Image.network(
+                          widget.journal.team2!.teamIconUrl!,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(Icons.error);
+                          },
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 8.0),
+                      ),
+                      Text(
+                        widget.journal.team2!.shortName!,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 17),
+                      ),
+                      const Spacer(),
+                      Text(
+                        '${widget.journal.matchResults?[1].pointsTeam2!}',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 17),
+                      )
+                    ],
+                  )
                 ],
-              )
-            ],
-          ),
+              ),
+            ),
+            Container(
+              width: 1, // Ancho de la barra
+              height: 70, // Altura de la barra (ajusta según tus necesidades)
+              color: Colors.grey, // Color de la barra
+              margin: const EdgeInsets.symmetric(
+                  horizontal: 8), // Margen horizontal
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Padding(padding: EdgeInsets.only(top: 8.0)),
+                Text(cambiarFormatoFecha(widget.journal.matchDateTime!),
+                    style: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.bold)),
+                const Padding(padding: EdgeInsets.only(top: 8.0)),
+                Text(
+                    widget.journal.matchIsFinished!
+                        ? 'Fin del partido'
+                        : '${widget.journal.matchDateTime}',
+                    style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 138, 138, 138))),
+                const Padding(padding: EdgeInsets.only(top: 8.0)),
+              ],
+            )
+          ],
         ),
       ),
     );
