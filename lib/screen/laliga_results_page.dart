@@ -55,61 +55,38 @@ class _LaLigaResultsPageState extends State<LaLigaResultsPage> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  const Text('LaLiga EA Sports',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  DropdownButton<int>(
-                    value: seasonValue,
-                    icon: const Icon(Icons.arrow_drop_down),
-                    elevation: 16,
-                    style: const TextStyle(color: Colors.deepPurple),
-                    underline: Container(
-                      height: 2,
-                      color: Colors.deepPurpleAccent,
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    isPressed = !isPressed;
+                    if (isPressed) {
+                      _showBottomSheet(context);
+                    }
+                  });
+                },
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(
+                        'Jornada: $journalValue',
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
                     ),
-                    onChanged: (int? value) {
-                      setState(() {
-                        seasonValue = value!;
-                      });
-                      _journalBloc
-                          .add(JournalsFetchEvent(journalValue, seasonValue));
-                    },
-                    items: season.map<DropdownMenuItem<int>>((int value) {
-                      return DropdownMenuItem<int>(
-                        value: value,
-                        child: Text('$value'),
-                      );
-                    }).toList(),
-                  )
-                ],
-              ),
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(
-                      'Jornada: $journalValue',
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isPressed = !isPressed;
-                        if (isPressed) {
-                          _showBottomSheet(context);
-                        }
-                      });
-                    },
-                    child: Icon(
+                    Icon(
                       isPressed ? Icons.arrow_drop_up : Icons.arrow_drop_down,
                     ),
-                  ),
-                ],
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'LA LIGA EA SPORTS',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
@@ -176,6 +153,10 @@ class _LaLigaResultsPageState extends State<LaLigaResultsPage> {
                         textAlign: TextAlign.center,
                       ),
                       onTap: () {
+                        setState(() {
+                          journalValue = groupId;
+                          isPressed = false;
+                        });
                         _journalBloc.add(
                           JournalsFetchEvent(groupId, seasonValue),
                         );

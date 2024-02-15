@@ -57,9 +57,33 @@ class _BundesligaResultsPageState extends State<BundesligaResultsPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  const Text('Bundesliga',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isPressed = !isPressed;
+                        if (isPressed) {
+                          _showBottomSheet(context);
+                        }
+                      });
+                    },
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(
+                            'Jornada: $journalValue',
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Icon(
+                          isPressed
+                              ? Icons.arrow_drop_up
+                              : Icons.arrow_drop_down,
+                        ),
+                      ],
+                    ),
+                  ),
                   DropdownButton<int>(
                     value: seasonValue,
                     icon: const Icon(Icons.arrow_drop_down),
@@ -85,30 +109,13 @@ class _BundesligaResultsPageState extends State<BundesligaResultsPage> {
                   )
                 ],
               ),
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(
-                      'Jornada: $journalValue',
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isPressed = !isPressed;
-                        if (isPressed) {
-                          _showBottomSheet(context);
-                        }
-                      });
-                    },
-                    child: Icon(
-                      isPressed ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                    ),
-                  ),
-                ],
+              const SizedBox(height: 8),
+              const Text(
+                'BUNDESLIGA',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
@@ -175,6 +182,10 @@ class _BundesligaResultsPageState extends State<BundesligaResultsPage> {
                         textAlign: TextAlign.center,
                       ),
                       onTap: () {
+                        setState(() {
+                          journalValue = groupId;
+                          isPressed = false;
+                        });
                         _journalBloc.add(
                           JournalsFetchEvent(groupId, seasonValue),
                         );

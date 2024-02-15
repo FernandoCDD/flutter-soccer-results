@@ -57,10 +57,14 @@ class DetailsScreen extends StatelessWidget {
                 child: Center(
                   child: Column(
                     children: [
-                      Text(
-                        '${journalSelected.matchResults?[1].pointsTeam1!} : ${journalSelected.matchResults?[1].pointsTeam2!}',
-                        style: const TextStyle(fontSize: 40),
-                      ),
+                      journalSelected.matchIsFinished!
+                          ? Text(
+                              '${journalSelected.matchResults?[1].pointsTeam1!} : ${journalSelected.matchResults?[1].pointsTeam2!}',
+                              style: const TextStyle(fontSize: 40),
+                            )
+                          : Text(
+                              journalSelected.matchDateTime!.substring(11, 16),
+                              style: const TextStyle(fontSize: 30)),
                       Text(cambiarFormatoFecha(journalSelected.matchDateTime!),
                           style: const TextStyle(fontSize: 10))
                     ],
