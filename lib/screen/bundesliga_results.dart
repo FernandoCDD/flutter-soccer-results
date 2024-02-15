@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:soccer_results/bloc/journal_bloc.dart';
+import 'package:soccer_results/bloc/group/group_bloc.dart';
+import 'package:soccer_results/bloc/journal/journal_bloc.dart';
 import 'package:soccer_results/model/bundes/journal/journal.dart';
 import 'package:soccer_results/repositories/bundesliga/journal_repository.dart';
 import 'package:soccer_results/repositories/bundesliga/journal_repository_impl.dart';
@@ -20,6 +21,7 @@ class _BundesligaResultsPageState extends State<BundesligaResultsPage> {
   int seasonValue = season.first;
   int journalValue = journal.first;
   bool isPressed = false;
+  late GroupBloc _groupBloc;
 
   @override
   void initState() {
@@ -27,6 +29,8 @@ class _BundesligaResultsPageState extends State<BundesligaResultsPage> {
     journalRepository = JournalRepositoryImpl();
     _journalBloc = BundesJournalBloc(journalRepository)
       ..add(JournalsFetchEvent(journalValue, seasonValue));
+    _groupBloc =
+        GroupBloc(journalRepository..add(GroupsFetchEvent("bl1", seasonValue)));
   }
 
   @override
@@ -38,87 +42,77 @@ class _BundesligaResultsPageState extends State<BundesligaResultsPage> {
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: _journalBloc,
-      child: Scaffold(
-        body: Column(
-          children: [
-            const SizedBox(height: 8),
-            const Text(
-              'BUNDESLIGA',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Expanded(
-              child: _matchView(context),
-            ),
-          ],
-        ),
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: AppBar(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Dropdown de la jornada
-                DropdownButton<int>(
-                  value: journalValue,
-                  icon: const Icon(Icons.arrow_drop_down),
-                  elevation: 16,
-                  style: const TextStyle(color: Colors.deepPurple),
-                  underline: Container(
-                    height: 2,
-                    color: Colors.deepPurpleAccent,
-                  ),
-                  onChanged: (int? value) {
-                    setState(() {
-                      journalValue = value!;
-                    });
-                    _journalBloc.add(JournalsFetchEvent(journalValue, seasonValue));
-                  },
-                  items: journal.map<DropdownMenuItem<int>>((int value) {
-                    return DropdownMenuItem<int>(
-                      value: value,
-                      child: Text('Jornada $value'),
-                    );
-                  }).toList(),
-                ),
-                // Dropdown del año
-                DropdownButton<int>(
-                  value: seasonValue,
-                  icon: const Icon(Icons.arrow_drop_down),
-                  elevation: 16,
-                  style: const TextStyle(color: Colors.deepPurple),
-                  underline: Container(
-                    height: 2,
-                    color: Colors.deepPurpleAccent,
-                  ),
-                  onChanged: (int? value) {
-                    setState(() {
-                      seasonValue = value!;
-                    });
-                    _journalBloc.add(JournalsFetchEvent(journalValue, seasonValue));
-                  },
-                  items: season.map<DropdownMenuItem<int>>((int value) {
-                    return DropdownMenuItem<int>(
-                      value: value,
-                      child: Text('$value'),
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
-            centerTitle: true,
-          ),
-        ),
-      ),
+      child: _matchView(context),
     );
   }
+
   Widget _matchView(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  const Text('Bundesliga',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  DropdownButton<int>(
+                    value: seasonValue,
+                    icon: const Icon(Icons.arrow_drop_down),
+                    elevation: 16,
+                    style: const TextStyle(color: Colors.deepPurple),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    onChanged: (int? value) {
+                      setState(() {
+                        seasonValue = value!;
+                      });
+                      _journalBloc
+                          .add(JournalsFetchEvent(journalValue, seasonValue));
+                    },
+                    items: season.map<DropdownMenuItem<int>>((int value) {
+                      return DropdownMenuItem<int>(
+                        value: value,
+                        child: Text('$value'),
+                      );
+                    }).toList(),
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text(
+                      'Jornada: $journalValue',
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isPressed = !isPressed;
+                        if (isPressed) {
+                          _showBottomSheet(context);
+                        }
+                      });
+                    },
+                    child: Icon(
+                      isPressed ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
         Expanded(
           child: BlocBuilder<BundesJournalBloc, JournalState>(
             builder: (context, state) {
@@ -161,30 +155,41 @@ class _BundesligaResultsPageState extends State<BundesligaResultsPage> {
   }
 
   void _showBottomSheet(BuildContext context) {
+    _groupBloc.add(GroupsFetchEvent('bl1', seasonValue));
     showModalBottomSheet<void>(
       context: context,
       isDismissible: false,
       builder: (BuildContext context) {
-        return ListView.builder(
-            itemCount: journal.length,
-            itemBuilder: (context, index) {
-              int journalIndex = journal[index];
-              return ListTile(
-                title: Text(
-                  'Jornada $journalIndex',
-                  textAlign: TextAlign.center,
-                ),
-                onTap: () {
-                  setState(() {
-                    journalValue = journalIndex;
-                  });
-                  _journalBloc
-                      .add(JournalsFetchEvent(journalValue, seasonValue));
-                  isPressed = false;
-                  Navigator.pop(context);
-                },
+        return BlocProvider.value(
+          value: _groupBloc,
+          child: BlocBuilder<GroupBloc, GroupState>(
+            builder: (context, state) {
+              if (state is GroupFetched) {
+                return ListView.builder(
+                  itemCount: state.groupList.length,
+                  itemBuilder: (context, index) {
+                    int groupId = state.groupList[index].groupOrderId!;
+                    return ListTile(
+                      title: Text(
+                        'Jornada $groupId',
+                        textAlign: TextAlign.center,
+                      ),
+                      onTap: () {
+                        _journalBloc.add(
+                          JournalsFetchEvent(groupId, seasonValue),
+                        );
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
+              }
+              return const Center(
+                child: CircularProgressIndicator(),
               );
-            });
+            },
+          ),
+        );
       },
     );
   }
